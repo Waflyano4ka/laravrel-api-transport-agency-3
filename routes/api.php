@@ -14,6 +14,7 @@ use \App\Http\Controllers\Api\PostController;
 use \App\Http\Controllers\Api\UserController;
 
 use \App\Http\Controllers\LoginController;
+use \App\Http\Controllers\LoadDocumentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -101,3 +102,4 @@ Route::middleware('auth:api')->delete('users/{id}',[UserController::class, 'dest
 Route::middleware('auth:api')->put('users/delete/{id}',[UserController::class, 'delete']);
 
 Route::post('login',[LoginController::class, 'login']);
+Route::middleware('auth:api')->post('load_document',[LoadDocumentController::class, 'loadDocument']);
