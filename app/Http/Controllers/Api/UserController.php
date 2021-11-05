@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\UserStoreRequest;
+use App\Http\Resources\UserResource;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
@@ -14,7 +18,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        return UserResource::collection(User::all()->where('deleted','<', 1));
     }
 
     /**
@@ -23,9 +27,13 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        //
+        $created_user = User::create($request->validated());
+        $created_user->password=Hash::make($created_user->password);
+        $created_user->save();
+
+        return new UserResource($created_user);
     }
 
     /**
@@ -36,7 +44,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        return new UserResource(User::where('deleted','<', 1)->findOrFail($id));
     }
 
     /**
@@ -46,9 +54,12 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserStoreRequest $request, $id)
     {
-        //
+        $user = User::where('deleted','<', 1)->findOrFail($id);
+        $user->update($request->validated());
+
+        return new UserResource($user);
     }
 
     /**
@@ -59,6 +70,19 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        User::findOrFail($id)->delete();
+
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+
+
+    public function delete($id)
+    {
+        $passenger = User::findOrFail($id);
+        $passenger->deleted = (integer)!$passenger->deleted;
+        $passenger->update();
+
+        return $passenger;
     }
 }
