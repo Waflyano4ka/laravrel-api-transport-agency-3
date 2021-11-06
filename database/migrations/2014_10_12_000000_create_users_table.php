@@ -27,7 +27,6 @@ class CreateUsersTable extends Migration
             $table->date('birthday');
             $table->boolean('deleted')->default(false)->nullable();
             $table->boolean('dismissed')->default(false)->nullable();
-            $table->rememberToken();
             $table->timestamps();
             $table->string('api_token',80)->nullable();
         });

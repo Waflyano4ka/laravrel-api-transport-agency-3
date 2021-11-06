@@ -42,6 +42,19 @@ class LoginController extends Controller
         $user = User::where('email', $request->get('email'))->first();
 
         if (Hash::check($request->get('password'), $user->password)) {
+            if ($user->deleted or $user->dismissed) {
+                return response()->json([
+                    "status" => false,
+                    "token" => "",
+                    "errors" => [
+                        "email" => "Учетная запись заблокирована",
+                        "password" => ""
+                    ]
+                ]);
+            }
+        }
+
+        if (Hash::check($request->get('password'), $user->password)) {
             $token = Str::random(60);
             $user->api_token = hash('sha256', $token);
             $user->save();

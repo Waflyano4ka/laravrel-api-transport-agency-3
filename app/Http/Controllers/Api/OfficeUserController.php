@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\OfficeUserStoreRequest;
+use App\Http\Resources\OfficeUserResource;
+use App\Models\OfficeUser;
+use Illuminate\Http\Response;
 
 class OfficeUserController extends Controller
 {
@@ -14,7 +17,7 @@ class OfficeUserController extends Controller
      */
     public function index()
     {
-        //
+        return OfficeUserResource::collection(OfficeUser::all()->where('deleted','<', 1));
     }
 
     /**
@@ -23,9 +26,11 @@ class OfficeUserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(OfficeUserStoreRequest $request)
     {
-        //
+        $created_office_user = OfficeUser::create($request->validated());
+
+        return new OfficeUserResource($created_office_user);
     }
 
     /**
@@ -36,7 +41,7 @@ class OfficeUserController extends Controller
      */
     public function show($id)
     {
-        //
+        return new OfficeUserResource(OfficeUser::where('deleted','<', 1)->findOrFail($id));
     }
 
     /**
@@ -46,9 +51,12 @@ class OfficeUserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(OfficeUserStoreRequest $request, $id)
     {
-        //
+        $office_user= OfficeUser::where('deleted','<', 1)->findOrFail($id);
+        $office_user->update($request->validated());
+
+        return new OfficeUserResource($office_user);
     }
 
     /**
@@ -59,6 +67,19 @@ class OfficeUserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        OfficeUser::findOrFail($id)->delete();
+
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+
+
+    public function delete($id)
+    {
+        $office_user = OfficeUser::findOrFail($id);
+        $office_user->deleted = (integer)!$office_user->deleted;
+        $office_user->update();
+
+        return $office_user;
     }
 }

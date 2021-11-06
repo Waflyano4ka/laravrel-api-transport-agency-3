@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\PostUserStoreRequest;
+use App\Http\Resources\PostUserResource;
+use App\Models\PostUser;
+use Illuminate\Http\Response;
 
 class PostUserController extends Controller
 {
@@ -14,7 +17,7 @@ class PostUserController extends Controller
      */
     public function index()
     {
-        //
+        return PostUserResource::collection(PostUser::all()->where('deleted','<', 1));
     }
 
     /**
@@ -23,9 +26,11 @@ class PostUserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostUserStoreRequest $request)
     {
-        //
+        $created_post_user = PostUser::create($request->validated());
+
+        return new PostUserResource($created_post_user);
     }
 
     /**
@@ -36,7 +41,7 @@ class PostUserController extends Controller
      */
     public function show($id)
     {
-        //
+        return new PostUserResource(PostUser::where('deleted','<', 1)->findOrFail($id));
     }
 
     /**
@@ -46,9 +51,12 @@ class PostUserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostUserStoreRequest $request, $id)
     {
-        //
+        $post_user = PostUser::where('deleted','<', 1)->findOrFail($id);
+        $post_user->update($request->validated());
+
+        return new PostUserResource($post_user);
     }
 
     /**
@@ -59,6 +67,19 @@ class PostUserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        PostUser::findOrFail($id)->delete();
+
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+
+
+    public function delete($id)
+    {
+        $post_user = PostUser::findOrFail($id);
+        $post_user->deleted = (integer)!$post_user->deleted;
+        $post_user->update();
+
+        return $post_user;
     }
 }

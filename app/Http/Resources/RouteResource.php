@@ -19,7 +19,7 @@ class RouteResource extends JsonResource
             'departure_city' => new CityResource($this->departureСity),
             'arrival_city' => new CityResource($this->arrivalСity),
             'distance' => $this->distance,
-            'user_id' => $this->user_id,
+            'user' => new UserResource($this->user),
         ];
     }
 }

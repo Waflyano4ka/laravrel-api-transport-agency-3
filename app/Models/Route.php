@@ -17,4 +17,7 @@ class Route extends Model
     public function arrivalСity(){
         return $this->belongsTo(City::class,'arrival_city_id','id');
     }
+    public function user(){
+        return $this->belongsTo(User::class,'user_id','id');
+    }
 }
