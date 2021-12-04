@@ -15,7 +15,7 @@ class PostUserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
         return PostUserResource::collection(PostUser::all()->where('deleted','<', 1));
     }
@@ -42,6 +42,13 @@ class PostUserController extends Controller
     public function show($id)
     {
         return new PostUserResource(PostUser::where('deleted','<', 1)->findOrFail($id));
+    }
+
+    public function posts($id)
+    {
+        $posts = PostUser::all()->where('user_id', $id);
+
+        return PostUserResource::collection($posts);
     }
 
     /**

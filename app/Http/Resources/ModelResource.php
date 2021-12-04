@@ -16,7 +16,7 @@ class ModelResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->model_name,
+            'model_name' => $this->model_name,
         ];
     }
 }

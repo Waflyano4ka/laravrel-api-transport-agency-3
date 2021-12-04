@@ -22,7 +22,7 @@ class ModelFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'model_name' => $this->faker->unique()->company,
         ];
     }
 }

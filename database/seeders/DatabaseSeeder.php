@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Http\Resources\PostUserResource;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,6 +14,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        $this->call([
+            PostSeeder::class,
+            UserSeeder::class,
+            PostUserSeeder::class,
+            CitySeeder::class,
+            ModelSeeder::class,
+        ]);
     }
 }

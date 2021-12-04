@@ -96,8 +96,9 @@ Route::middleware('auth:api')->put('posts/{id}',[PostController::class, 'update'
 Route::middleware('auth:api')->delete('posts/{id}',[PostController::class, 'destroy']);
 Route::middleware('auth:api')->put('posts/delete/{id}',[PostController::class, 'delete']);
 
-Route::middleware('auth:api')->get('post_user',[PostUserController::class, 'index']);
+Route::middleware('auth:api')->get('post_user/',[PostUserController::class, 'index']);
 Route::middleware('auth:api')->get('post_user/{id}',[PostUserController::class, 'show']);
+Route::middleware('auth:api')->get('post_user/posts/{id}',[PostUserController::class, 'posts']);
 Route::middleware('auth:api')->post('post_user',[PostUserController::class, 'store']);
 Route::middleware('auth:api')->put('post_user/{id}',[PostUserController::class, 'update']);
 Route::middleware('auth:api')->delete('post_user/{id}',[PostUserController::class, 'destroy']);
@@ -112,7 +113,7 @@ Route::middleware('auth:api')->put('office_user/delete/{id}',[OfficeUserControll
 
 Route::middleware('auth:api')->get('users',[UserController::class, 'index']);
 Route::middleware('auth:api')->get('users/{id}',[UserController::class, 'show']);
-Route::post('users',[UserController::class, 'store']);
+Route::middleware('auth:api')->post('users',[UserController::class, 'store']);
 Route::middleware('auth:api')->put('users/{id}',[UserController::class, 'update']);
 Route::middleware('auth:api')->delete('users/{id}',[UserController::class, 'destroy']);
 Route::middleware('auth:api')->put('users/delete/{id}',[UserController::class, 'delete']);

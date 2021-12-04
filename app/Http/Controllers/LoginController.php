@@ -24,6 +24,7 @@ class LoginController extends Controller
             return response()->json([
                 "status" => false,
                 "token" => "",
+                "user" => "",
                 "errors" => [
                     "email" => count($validator->errors()->get("email")) == 0 ? "" : $validator->errors()->get("email")[0],
                     "password" => count($validator->errors()->get('password')) == 0 ? "" : $validator->errors()->get('password')[0]
@@ -34,6 +35,7 @@ class LoginController extends Controller
             return response()->json([
                 "status" => false,
                 "token" => "",
+                "user" => "",
                 "errors" => [
                     "email" => "Пользователь не найден",
                     "password" => ""
@@ -46,6 +48,7 @@ class LoginController extends Controller
                 return response()->json([
                     "status" => false,
                     "token" => "",
+                    "user" => "",
                     "errors" => [
                         "email" => "Учетная запись заблокирована",
                         "password" => ""
@@ -61,6 +64,7 @@ class LoginController extends Controller
             return response()->json([
                 "status" => true,
                 "token" => $token,
+                "user" => $user->id,
                 "errors" => [
                     "email" => "",
                     "password" => ""
@@ -70,6 +74,7 @@ class LoginController extends Controller
             return response()->json([
                 "status" => false,
                 "token" => "",
+                "user" => "",
                 "errors" => [
                     "email" => "Нвеверный пароль",
                     "password" => ""
